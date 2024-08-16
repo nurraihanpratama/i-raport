@@ -1,0 +1,24 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Modules\{{ class }}\Resources\Single{{ class }}Resource;
+use App\Modules\{{ class }}\Models\{{ class }};
+use Illuminate\Http\JsonResponse;
+
+class {{ class }}EditAction
+{
+	public function edit($request, string $id): JsonResponse
+	{
+		$options = (new {{ class }}CreateAction)->getOptions($request);
+
+		$data = {{ class }}::query()
+			->withTrashed()
+			->singleRowQuery()
+			->findOrFail($id);
+
+		${{ class }} = new Single{{ class }}Resource($data);
+
+		return response()->json(compact('options', '{{ class }}'));
+	}
+}

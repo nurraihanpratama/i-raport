@@ -1,0 +1,35 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Support\Facades\DB;
+use App\Modules\{{ class }}\Models\{{ class }};
+
+class {{ class }}UpdateAction
+{
+	public $model;
+
+	public function update($request, $team_slug,  $id)
+	{
+		try {
+
+			$data = (new Build{{ class }}Data)->build($request, 'update');
+
+			DB::transaction(function () use ($request, $id, $data) {
+				// *** START ***
+
+				${{ class }} = {{ class }}::findOrFail($id);
+
+				$this->model = ${{ class }};
+
+				${{ class }}->update($data);
+
+				// *** DONE ***
+			});
+			return back()->withFlash('Berhasil update {{ class }} No: ' . $this->model->credit_no);
+		} catch (\Throwable $th) {
+			saveErrorLog($th, __FILE__);
+			return back()->withErrors(config('app.error_msg'));
+		}
+	}
+}

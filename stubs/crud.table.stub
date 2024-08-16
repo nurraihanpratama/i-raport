@@ -1,0 +1,37 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Modules\{{ class }}\Resources\{{ class }}Resource;
+use App\Modules\{{ class }}\Models\{{ class }};
+use Illuminate\Http\Request;
+
+class {{ class }}DataTable
+{
+	public function generate(Request $request)
+	{
+		$search = $request->get('search');
+		$sort   = $request->get('sort');
+		$type   = $request->get('type');
+		$status = $request->get('status');
+
+		$data = {{ class }}::query()
+			->inhouse(getInhouseTeams())
+			->withTrashed()
+			->datatableQuery()
+			->withSearch($search)
+			->withSort($sort)
+			->withFilter($status, '{{ class }}_status')
+			->paginate()
+			->appends([
+				'search' => $search,
+				'sort'   => $sort,
+				'status' => $status,
+				'type'   => $type,
+			]);
+
+		$collection = {{ class }}Resource::collection($data);
+
+		return $collection;
+	}
+}

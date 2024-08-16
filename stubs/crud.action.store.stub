@@ -1,0 +1,34 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Modules\{{ class }}\Actions\SubActions\Build{{ class }}Data;
+use Illuminate\Support\Facades\DB;
+use App\Modules\{{ class }}\Models\{{ class }};
+
+class {{ class }}StoreAction
+{
+	public $storedData;
+
+	public function store($request)
+	{
+		try {
+
+			$data = (new Build{{ class }}Data)->build($request, 'store');
+
+			DB::transaction(function () use ($request, $data) {
+				// *** START ***
+
+				$new{{ class }} = {{ class }}::create($data);
+
+				$this->storedData = $new{{ class }};
+
+				// *** DONE ***
+			});
+			return back()->withFlash('Berhasil tambah {{ class }} baru: ' . $this->storedData->name);
+		} catch (\Throwable $th) {
+			saveErrorLog($th, __FILE__);
+			return back()->withErrors(config('app.error_msg'));
+		}
+	}
+}

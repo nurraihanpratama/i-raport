@@ -1,0 +1,77 @@
+import Modal from '@/Theme/Components/Modal'
+import { Fragment, useState } from 'react'
+import { FaFilter } from 'react-icons/fa'
+import { BiPlus } from 'react-icons/bi'
+import { usePage } from '@inertiajs/react'
+import { hasPermissionToCreate{{ class }} } from '@/Helpers/authorization'
+import DataTable from '@/Theme/Components/DataTable/DataTable'
+import PrimaryButton from '@/Theme/Components/Buttons/PrimaryButton'
+import MoneyTemplate from '@/Theme/Components/DataTable/CellTemplates/MoneyTemplate'
+import Pill from '@/Theme/Components/Pill'
+import {{ class }}Actions from './{{ class }}Actions'
+import {{ class }}Filter from './{{ class }}Filter'
+
+export default function {{ class }}DataTable({ collection, withNewButton = false, onClickNew }) {
+  const { user } = usePage().props.auth
+
+  // ALL COLUMNS BY DEFAULT 'sortable' IS TRUE & 'searchable' IS TRUE
+  const {{ class }}DataTableColumns = [
+    {
+      header: '',
+      field: '__actions',
+      sortable: false,
+      searchable: false,
+      bodyAlignment: 'center',
+      render: (row) => <{{ class }}Actions row={row} />,
+    },
+    {
+      header: 'ID.',
+      field: 'id',
+    },
+  ]
+
+  function canCreateNew{{ class }}() {
+    if (!withNewButton) return false
+    if (!hasPermissionToCreate{{ class }}()) return false
+    if (['hosting'].includes(user.current_team.type)) return false
+    return true
+  }
+
+  return (
+    <DataTable
+      collection={collection}
+      columns={{{ class }}DataTableColumns}
+      ActionsButton={canCreateNew{{ class }}() && <ActionsButton onClickNew={onClickNew} />}
+      // FilterButton={<FilterButton />}
+      withSearch
+      withPagination
+      resetRouteRedirect={route('{{ classNameSlug }}.index', user.current_team.slug)}
+    />
+  )
+}
+
+const ActionsButton = ({ onClickNew }) => {
+  return (
+    <Fragment>
+      <PrimaryButton onClick={onClickNew}>
+        <BiPlus />
+        New
+      </PrimaryButton>
+    </Fragment>
+  )
+}
+
+const FilterButton = () => {
+  const [visible, setVisible] = useState(false)
+  return (
+    <Fragment>
+      <PrimaryButton onClick={() => setVisible(true)}>
+        <FaFilter size={12} />
+        Filter
+      </PrimaryButton>
+      <Modal visible={visible} setVisible={setVisible} noescape>
+        {/* <{{ class }}Filter closeForm={() => setVisible(false)} /> */}
+      </Modal>
+    </Fragment>
+  )
+}

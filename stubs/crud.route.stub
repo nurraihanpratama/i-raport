@@ -1,0 +1,17 @@
+<?php
+
+use App\Modules\{{ class }}\Controllers\{{ class }}Controller;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| {{ class }} Web Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::prefix('{team}/')
+	->middleware(['auth', 'verified', 'CheckRoleIsExisting'])
+	->group(function () {
+		Route::resource("{{ classNameSlug }}", {{ class }}Controller::class);
+	});

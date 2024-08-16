@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Modules\{{ class }}\Models\{{ class }};
+
+class Build{{ class }}Data
+{
+	public function build($request, $action)
+	{
+		$data = getValidatedData(new {{ class }}, $request->toArray());
+
+		if ($action == 'store') {
+			//
+		}
+
+		return $data;
+	}
+}

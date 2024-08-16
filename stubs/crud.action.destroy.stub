@@ -1,0 +1,28 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Support\Facades\DB;
+use App\Modules\{{ class }}\Models\{{ class }};
+
+class {{ class }}DestroyAction
+{
+	public function destroy($team_slug, $id)
+	{
+		try {
+			DB::transaction(function () use ($team_slug, $id) {
+				// *** START ***
+
+				${{ class }} = {{ class }}::findOrFail($id);
+
+				${{ class }}->delete();
+
+				// *** DONE ***
+			});
+			return back()->withFlash('Berhasil delete biaya');
+		} catch (\Throwable $th) {
+			saveErrorLog($th, __FILE__);
+			return back()->withErrors(config('app.error_msg'));
+		}
+	}
+}
